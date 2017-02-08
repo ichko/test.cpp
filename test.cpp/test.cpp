@@ -34,7 +34,7 @@ namespace Test {
 
     };
 
-    struct Assert {
+    namespace Assert {
 
         template <typename T> static void AreEqual(T left, T right) {
             if (left != right) {
@@ -101,7 +101,7 @@ namespace Test {
             return *this;
         }
 
-        Case& OutputResults(ostream& os) {
+        Case& OutputResults(ostream& os) const {
             int counter = 1;
             os << "# Results for test case '" << name << "' " << std::endl;
             for (auto& test_result : test_results) {
