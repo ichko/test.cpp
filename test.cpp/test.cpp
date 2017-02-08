@@ -101,7 +101,7 @@ namespace Test {
             return *this;
         }
 
-        Case& OutputResults(ostream& os) const {
+        Case& OutputResults(ostream& os) {
             int counter = 1;
             os << "# Results for test case '" << name << "' " << std::endl;
             for (auto& test_result : test_results) {
