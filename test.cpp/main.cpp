@@ -1,9 +1,9 @@
 #include <iostream>
 #include "test.cpp"
 
-int main() {
+typedef Test::Assert Assert;
 
-    typedef Test::Assert Assert;
+int main() {
 
     Test::Case("Testing math")
 
@@ -25,6 +25,10 @@ int main() {
             int* actual = &value;
 
             Assert::AreSame(expected, actual);
+        })
+
+        .AddTest("unknown exception error", []() {
+            throw "unknown exception on the way";
         })
 
 

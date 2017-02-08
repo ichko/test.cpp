@@ -11,6 +11,7 @@ using std::ostream;
 
 #define UNKNOWN_EXCEPTION_MESSAGE "Unknown exception occurred"
 
+
 namespace Test {
 
     struct AssertionException {
@@ -28,7 +29,8 @@ namespace Test {
         string message;
 
         TestResult(bool _success = true, string _test_name = "", string _message = "") :
-            success(_success), test_name(_test_name), message(_message) {}
+            success(_success), test_name(_test_name), message(_message) {
+        }
 
     };
 
@@ -104,8 +106,8 @@ namespace Test {
             os << "# Results for test case '" << name << "' " << std::endl;
             for (auto& test_result : test_results) {
                 os << counter++ << ". [" << (test_result.success ? "+" : "-") << "]" << " "
-                   << test_result.test_name << std::endl;
-                os << (test_result.success ? "" : "   "  + test_result.message + "\n");
+                    << test_result.test_name << std::endl;
+                os << (test_result.success ? "" : "   " + test_result.message + "\n");
             }
 
             return *this;
