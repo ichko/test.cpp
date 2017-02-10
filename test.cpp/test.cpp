@@ -68,11 +68,40 @@ namespace Test {
         list<pair<string, void(*)()>> tests;
         list<TestResult> test_results;
 
+        void(*before_test)();
+        void(*after_test)();
+        void(*setup)();
+        void(*tear_down)();
+
     public:
-        Case(string _name) : name(_name) {}
+        Case(string _name) :
+            name(_name),
+            before_test(nullptr), after_test(nullptr),
+            setup(nullptr), tear_down(nullptr) {
+        }
 
         Case& AddTest(string name, void(*test)()) {
             tests.push_back({ name, test });
+            return *this;
+        }
+
+        Case& BeforeTest(void(*_before_test)()) {
+            before_test = _before_test;
+            return *this;
+        }
+
+        Case& AfterTest(void(*_after_test)()) {
+            after_test = _after_test;
+            return *this;
+        }
+
+        Case& Setup(void(*_setup)()) {
+            setup = _setup;
+            return *this;
+        }
+
+        Case& TearDown(void(*_tear_down)()) {
+            tear_down = _tear_down;
             return *this;
         }
 
@@ -111,6 +140,15 @@ namespace Test {
             }
 
             return *this;
+        }
+
+    private:
+        template <typename I, typename O> O* RunFunction(O*(*function)(I*), I* input) {
+            if (function != nullptr) {
+                return function(I*);
+            }
+
+            return nullptr;
         }
 
     };
