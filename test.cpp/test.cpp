@@ -106,18 +106,26 @@ namespace Test {
         }
 
         Case& RunAll() {
+            RunFunction(setup);
+
             for (auto& test : tests) {
                 auto test_name = test.first;
-                auto function = test.second;
+                auto test_function = test.second;
                 auto success = true;
                 string message = "";
 
                 try {
-                    function();
+                    RunFunction(before_test);
+                    RunFunction(test_function);
+                    RunFunction(after_test);
                 }
                 catch (const AssertionException& exception) {
                     success = false;
                     message = exception.message;
+                }
+                catch (string _message) {
+                    success = false;
+                    message = _message;
                 }
                 catch (...) {
                     success = false;
@@ -126,6 +134,7 @@ namespace Test {
 
                 test_results.push_back(TestResult(success, test_name, message));
             }
+            RunFunction(tear_down);
 
             return *this;
         }
@@ -142,13 +151,15 @@ namespace Test {
             return *this;
         }
 
-    private:
-        template <typename I, typename O> O* RunFunction(O*(*function)(I*), I* input) {
-            if (function != nullptr) {
-                return function(I*);
-            }
+        auto GetTestResults() {
+            return test_results.begin();
+        }
 
-            return nullptr;
+    private:
+        void RunFunction(void(*function)()) {
+            if (function != nullptr) {
+                function();
+            }
         }
 
     };

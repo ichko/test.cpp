@@ -3,23 +3,47 @@
 
 using namespace Test;
 
+struct Context {
+
+    bool success;
+    string string_value;
+    int numeric_value;
+    int destroyed;
+
+    Context() : destroyed(false) {}
+
+    void Destroy() { destroyed = true; }
+
+} Context;
+
 
 auto MathTests = Case("Testing math")
+
+.Setup([]() {
+    Context.success = true;
+    Context.string_value = "unknown exception on the way";
+    Context.numeric_value = 42;
+})
+
+.TearDown([]() {
+    Context.Destroy();
+})
+
 
 .AddTest("was pythagoras right", []() {
     Assert::AreEqual(5 * 5, 4 * 4 + 3 * 3);
 })
 
 .AddTest("assertion true test", []() {
-    Assert::IsTrue(true);
+    Assert::IsTrue(Context.success);
 })
 
 .AddTest("failing test", []() {
-    Assert::IsTrue(false);
+    Assert::IsTrue(!Context.success);
 })
 
 .AddTest("are same test", []() {
-    int value = 42;
+    int value = Context.numeric_value;
     int* expected = &value;
     int* actual = &value;
 
@@ -27,7 +51,7 @@ auto MathTests = Case("Testing math")
 })
 
 .AddTest("unknown exception error", []() {
-    throw "unknown exception on the way";
+    throw Context.string_value;
 });
 
 
@@ -35,6 +59,10 @@ int main() {
     MathTests
         .RunAll()
         .OutputResults(std::cout);
+
+    std::cout << "> context is "
+        << (Context.destroyed ? "" : "not ")
+        << "destroyed" << std::endl;
 
     return 0;
 }
