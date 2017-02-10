@@ -3,6 +3,9 @@
 
 using namespace Test;
 
+
+// Tests context struct
+
 struct Context {
 
     bool success;
@@ -17,7 +20,24 @@ struct Context {
 } Context;
 
 
-auto MathTests = Case("Testing math")
+// Defining tests
+
+auto SimpleTestCase = Case("Simple test case")
+
+.AddTest("was pythagoras right", []() {
+    Assert::AreEqual(5 * 5, 4 * 4 + 3 * 3);
+})
+
+.AddTest("assertion true test", []() {
+    Assert::IsTrue(true);
+})
+
+.AddTest("failing test", []() {
+    Assert::IsTrue(false);
+});
+
+
+auto ComplexTestCase = Case("Compex test case")
 
 .Setup([]() {
     Context.success = true;
@@ -29,23 +49,9 @@ auto MathTests = Case("Testing math")
     Context.Destroy();
 })
 
-
-.AddTest("was pythagoras right", []() {
-    Assert::AreEqual(5 * 5, 4 * 4 + 3 * 3);
-})
-
-.AddTest("assertion true test", []() {
-    Assert::IsTrue(Context.success);
-})
-
-.AddTest("failing test", []() {
-    Assert::IsTrue(!Context.success);
-})
-
 .AddTest("are same test", []() {
-    int value = Context.numeric_value;
-    int* expected = &value;
-    int* actual = &value;
+    int actual = Context.numeric_value;
+    int& expected = actual;
 
     Assert::AreSame(expected, actual);
 })
@@ -56,7 +62,11 @@ auto MathTests = Case("Testing math")
 
 
 int main() {
-    MathTests
+    SimpleTestCase
+        .RunAll()
+        .OutputResults(std::cout);
+
+    ComplexTestCase
         .RunAll()
         .OutputResults(std::cout);
 

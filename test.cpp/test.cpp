@@ -42,8 +42,8 @@ namespace Test {
             }
         }
 
-        template <typename T> static void AreSame(T* left, T* right) {
-            if (left != right) {
+        template <typename T> static void AreSame(T& left, T& right) {
+            if (&left != &right) {
                 throw AssertionException("Assertion are equal failed");
             }
         }
@@ -141,12 +141,13 @@ namespace Test {
 
         Case& OutputResults(ostream& os) {
             int counter = 1;
-            os << "# Results for test case '" << name << "' " << std::endl;
+            os << "# " << name << std::endl;
             for (auto& test_result : test_results) {
                 os << counter++ << ". [" << (test_result.success ? "+" : "-") << "]" << " "
                     << test_result.test_name << std::endl;
                 os << (test_result.success ? "" : "   " + test_result.message + "\n");
             }
+            os << std::endl;
 
             return *this;
         }
