@@ -12,7 +12,7 @@ using namespace Test; // Easy access to the Assert namespace
 
 ## Simple test case
 
-### Definition
+### Source
 ```cpp
 auto SimpleTestCase = Case("Simple test case")
 
@@ -46,7 +46,7 @@ int main() {
 
 ## Complex test case
 
-### Definition
+### Source
 ```cpp
 // Tests context struct
 struct Context {
