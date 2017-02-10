@@ -31,7 +31,7 @@ auto MathTests = Case("Testing math")
     Context.numeric_value = 42;
 })
 
-.TearDown([]() {
+.Teardown([]() {
     Context.Destroy();
 })
 

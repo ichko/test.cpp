@@ -71,13 +71,13 @@ namespace Test {
         void(*before_test)();
         void(*after_test)();
         void(*setup)();
-        void(*tear_down)();
+        void(*teardown)();
 
     public:
         Case(string _name) :
             name(_name),
             before_test(nullptr), after_test(nullptr),
-            setup(nullptr), tear_down(nullptr) {
+            setup(nullptr), teardown(nullptr) {
         }
 
         Case& AddTest(string name, void(*test)()) {
@@ -100,8 +100,8 @@ namespace Test {
             return *this;
         }
 
-        Case& TearDown(void(*_tear_down)()) {
-            tear_down = _tear_down;
+        Case& Teardown(void(*_tear_down)()) {
+            teardown = _tear_down;
             return *this;
         }
 
@@ -134,7 +134,7 @@ namespace Test {
 
                 test_results.push_back(TestResult(success, test_name, message));
             }
-            RunFunction(tear_down);
+            RunFunction(teardown);
 
             return *this;
         }
