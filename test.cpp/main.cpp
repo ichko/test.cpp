@@ -73,6 +73,4 @@ int main() {
     std::cout << "> context is "
         << (Context.destroyed ? "" : "not ")
         << "destroyed" << std::endl;
-
-    return 0;
 }

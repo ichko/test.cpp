@@ -1,14 +1,54 @@
 # test.cpp
 Unit testing library for c++
 
-## Example
-### main.cpp
-```cpp
-#include <iostream>
+## Examples
+
+##Usage
+
+```
 #include "test.cpp"
+using namespace Test; // Easy access to the Assert namespace
+```
 
-using namespace Test;
+## Simple test case
 
+### Definition
+```cpp
+auto SimpleTestCase = Case("Simple test case")
+
+.AddTest("was pythagoras right", []() {
+    Assert::AreEqual(5 * 5, 4 * 4 + 3 * 3);
+})
+
+.AddTest("assertion true test", []() {
+    Assert::IsTrue(true);
+})
+
+.AddTest("failing test", []() {
+    Assert::IsTrue(false);
+});
+
+int main() {
+    SimpleTestCase
+        .RunAll()
+        .OutputResults(std::cout);
+}
+```
+
+### Output
+```
+# Simple test case
+1. [+] was pythagoras right
+2. [+] assertion true test
+3. [-] failing test
+   Assertion IsTrue failed
+```
+
+## Complex test case
+
+### Definition
+```cpp
+// Tests context struct
 struct Context {
 
     bool success;
@@ -23,7 +63,7 @@ struct Context {
 } Context;
 
 
-auto MathTests = Case("Testing math")
+auto ComplexTestCase = Case("Compex test case")
 
 .Setup([]() {
     Context.success = true;
@@ -35,23 +75,9 @@ auto MathTests = Case("Testing math")
     Context.Destroy();
 })
 
-
-.AddTest("was pythagoras right", []() {
-    Assert::AreEqual(5 * 5, 4 * 4 + 3 * 3);
-})
-
-.AddTest("assertion true test", []() {
-    Assert::IsTrue(Context.success);
-})
-
-.AddTest("failing test", []() {
-    Assert::IsTrue(!Context.success);
-})
-
 .AddTest("are same test", []() {
-    int value = Context.numeric_value;
-    int* expected = &value;
-    int* actual = &value;
+    int actual = Context.numeric_value;
+    int& expected = actual;
 
     Assert::AreSame(expected, actual);
 })
@@ -62,26 +88,22 @@ auto MathTests = Case("Testing math")
 
 
 int main() {
-    MathTests
+    ComplexTestCase
         .RunAll()
         .OutputResults(std::cout);
 
-    std::cout << "context is "
+    std::cout << "> context is "
         << (Context.destroyed ? "" : "not ")
         << "destroyed" << std::endl;
-
-    return 0;
 }
 ```
+
 ### Output
 ```
-# Results for test case 'Testing math'
-1. [+] was pythagoras right
-2. [+] assertion true test
-3. [-] failing test
-   Assertion IsTrue failed
-4. [+] are same test
-5. [-] unknown exception error
+# Compex test case
+1. [+] are same test
+2. [-] unknown exception error
    unknown exception on the way
+
 > context is destroyed
 ```
