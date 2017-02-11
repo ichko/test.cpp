@@ -58,6 +58,12 @@ auto ComplexTestCase = Case("Compex test case")
 
 .AddTest("unknown exception error", []() {
     throw Context.string_value;
+})
+
+.AddTest("assert arrays equal", []() {
+    char* left_array = "hello";
+    char* right_array = "hello";
+    Assert::ArraysEqual(left_array, right_array, 5);
 });
 
 

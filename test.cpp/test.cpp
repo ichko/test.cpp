@@ -60,10 +60,10 @@ namespace Test {
             }
         }
 
-        template <typename T> static void AssertArraysEqual(T* left, T* right, int size) {
+        template <typename T> static void ArraysEqual(T* left, T* right, int size) {
             for (size_t i = 0; i < size; i++) {
                 if (left[i] != right[i]) {
-                    throw AssertionException("Assertion AssertArraysEqual failed at position " + i);
+                    throw AssertionException("Assertion AssertArraysEqual failed");
                 }
             }
         }
