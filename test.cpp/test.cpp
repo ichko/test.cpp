@@ -3,6 +3,7 @@
 #include <list>
 #include <string>
 #include <ostream>
+#include <typeinfo>
 
 using std::list;
 using std::pair;
@@ -13,6 +14,18 @@ using std::ostream;
 
 
 namespace Test {
+
+    struct SingleTest {
+
+        string name;
+        void(*function)();
+        bool throws_exception;
+
+        SingleTest(string _name, void(*_function)(), bool _throws_exception = false) :
+            name(_name), function(_function), throws_exception(_throws_exception) {
+        }
+
+    };
 
     struct AssertionException {
 
@@ -60,7 +73,7 @@ namespace Test {
             }
         }
 
-        template <typename T> static void ArraysEqual(T* left, T* right, int size) {
+        template <typename T> static void ArraysEqual(T* left, T* right, size_t size) {
             for (size_t i = 0; i < size; i++) {
                 if (left[i] != right[i]) {
                     throw AssertionException("Assertion AssertArraysEqual failed");
@@ -73,7 +86,7 @@ namespace Test {
     class Case {
 
         string name;
-        list<pair<string, void(*)()>> tests;
+        list<SingleTest> tests;
         list<TestResult> test_results;
 
         void(*before_test)();
@@ -88,8 +101,13 @@ namespace Test {
             setup(nullptr), teardown(nullptr) {
         }
 
-        Case& AddTest(string name, void(*test)()) {
-            tests.push_back({ name, test });
+        Case& Test(string name, void(*test)()) {
+            tests.push_back(SingleTest(name, test));
+            return *this;
+        }
+
+        Case& TestThrows(string name, void(*test)()) {
+            tests.push_back(SingleTest(name, test, true));
             return *this;
         }
 
@@ -117,14 +135,12 @@ namespace Test {
             RunFunction(setup);
 
             for (auto& test : tests) {
-                auto test_name = test.first;
-                auto test_function = test.second;
                 auto success = true;
                 string message = "";
 
                 try {
                     RunFunction(before_test);
-                    RunFunction(test_function);
+                    RunFunction(test.function, test.throws_exception);
                     RunFunction(after_test);
                 }
                 catch (const AssertionException& exception) {
@@ -135,12 +151,16 @@ namespace Test {
                     success = false;
                     message = _message;
                 }
+                catch (const char* _message) {
+                    success = false;
+                    message = _message;
+                }
                 catch (...) {
                     success = false;
                     message = UNKNOWN_EXCEPTION_MESSAGE;
                 }
 
-                test_results.push_back(TestResult(success, test_name, message));
+                test_results.push_back(TestResult(success, test.name, message));
             }
             RunFunction(teardown);
 
@@ -165,10 +185,19 @@ namespace Test {
         }
 
     private:
-        void RunFunction(void(*function)()) {
+        void RunFunction(void(*function)(), bool _catch = false) {
             if (function != nullptr) {
-                function();
+                if (_catch) {
+                    try {
+                        function();
+                    }
+                    catch (...) {}
+                }
+                else {
+                    function();
+                }
             }
+
         }
 
     };

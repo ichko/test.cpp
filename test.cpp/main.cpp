@@ -24,15 +24,15 @@ struct Context {
 
 auto SimpleTestCase = Case("Simple test case")
 
-.AddTest("was pythagoras right", []() {
+.Test("was pythagoras right", []() {
     Assert::AreEqual(5 * 5, 4 * 4 + 3 * 3);
 })
 
-.AddTest("assertion true test", []() {
+.Test("assertion true test", []() {
     Assert::IsTrue(true);
 })
 
-.AddTest("failing test", []() {
+.Test("failing test", []() {
     Assert::IsTrue(false);
 });
 
@@ -49,18 +49,22 @@ auto ComplexTestCase = Case("Compex test case")
     Context.Destroy();
 })
 
-.AddTest("are same test", []() {
+.Test("are same test", []() {
     int actual = Context.numeric_value;
     int& expected = actual;
 
     Assert::AreSame(expected, actual);
 })
 
-.AddTest("unknown exception error", []() {
+.Test("unknown exception error", []() {
     throw Context.string_value;
 })
 
-.AddTest("assert arrays equal", []() {
+.TestThrows("test throwing exception", []() {
+    throw "throwing string";
+})
+
+.Test("assert arrays equal", []() {
     char* left_array = "hello";
     char* right_array = "hello";
     Assert::ArraysEqual(left_array, right_array, 5);
