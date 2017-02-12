@@ -86,6 +86,10 @@ auto ComplexTestCase = Case("Compex test case")
     throw Context.string_value;
 })
 
+.TestThrows("test throwing exception", []() {
+    throw "throwing string";
+})
+
 .AddTest("assert arrays equal", []() {
     char* left_array = "hello";
     char* right_array = "hello";
@@ -110,7 +114,8 @@ int main() {
 1. [+] are same test
 2. [-] unknown exception error
    unknown exception on the way
-3. [+] assert arrays equal
+3. [+] test throwing exception
+4. [+] assert arrays equal
 
 > context is destroyed
 ```
