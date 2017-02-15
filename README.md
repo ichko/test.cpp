@@ -86,8 +86,10 @@ auto ComplexTestCase = Case("Compex test case")
     throw Context.string_value;
 })
 
-.TestThrows("test throwing exception", []() {
-    throw "throwing string";
+.Test("test assert throws", []() {
+    Assert::Throws<char*>([]() {
+        throw "throwing string";
+    });
 })
 
 .Test("assert arrays equal", []() {
@@ -114,7 +116,7 @@ int main() {
 1. [+] are same test
 2. [-] unknown exception error
    unknown exception on the way
-3. [+] test throwing exception
+3. [+] test assert throws
 4. [+] assert arrays equal
 
 > context is destroyed
