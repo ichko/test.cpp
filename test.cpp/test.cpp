@@ -81,6 +81,16 @@ namespace Test {
             }
         }
 
+        template <typename T> static void Throws(void(*function)()) {
+            try {
+                function();
+            }
+            catch (T exception) {}
+            catch (...) {
+                throw AssertionException("Assertion AssertThrows failed");
+            }
+        }
+
     };
 
     class Case {

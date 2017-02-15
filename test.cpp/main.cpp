@@ -60,8 +60,10 @@ auto ComplexTestCase = Case("Compex test case")
     throw Context.string_value;
 })
 
-.TestThrows("test throwing exception", []() {
-    throw "throwing string";
+.Test("test assert throws", []() {
+    Assert::Throws<char*>([]() {
+        throw "throwing string";
+    });
 })
 
 .Test("assert arrays equal", []() {
