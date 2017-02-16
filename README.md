@@ -24,6 +24,13 @@ auto SimpleTestCase = Case("Simple test case")
     Assert::IsTrue(true);
 })
 
+.Test("are same test", []() {
+    int actual = Context.numeric_value;
+    int& expected = actual;
+
+    Assert::AreSame(expected, actual);
+})
+
 .Test("failing test", []() {
     Assert::IsTrue(false);
 });
@@ -40,7 +47,8 @@ int main() {
 # Simple test case
 1. [+] was pythagoras right
 2. [+] assertion true test
-3. [-] failing test
+3. [+] are same test
+4. [-] failing test
    Assertion IsTrue failed
 ```
 
@@ -73,13 +81,6 @@ auto ComplexTestCase = Case("Compex test case")
 
 .Teardown([]() {
     Context.Destroy();
-})
-
-.Test("are same test", []() {
-    int actual = Context.numeric_value;
-    int& expected = actual;
-
-    Assert::AreSame(expected, actual);
 })
 
 .Test("unknown exception error", []() {
@@ -116,8 +117,7 @@ int main() {
 1. [+] are same test
 2. [-] unknown exception error
    unknown exception on the way
-3. [+] test assert throws
-4. [+] assert arrays equal
+3. [+] assert arrays equal
 
 > context is destroyed
 ```

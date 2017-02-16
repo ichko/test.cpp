@@ -32,6 +32,13 @@ auto SimpleTestCase = Case("Simple test case")
     Assert::IsTrue(true);
 })
 
+.Test("are same test", []() {
+    int actual = Context.numeric_value;
+    int& expected = actual;
+
+    Assert::AreSame(expected, actual);
+})
+
 .Test("failing test", []() {
     Assert::IsTrue(false);
 });
@@ -47,13 +54,6 @@ auto ComplexTestCase = Case("Compex test case")
 
 .Teardown([]() {
     Context.Destroy();
-})
-
-.Test("are same test", []() {
-    int actual = Context.numeric_value;
-    int& expected = actual;
-
-    Assert::AreSame(expected, actual);
 })
 
 .Test("unknown exception error", []() {
