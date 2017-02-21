@@ -5,8 +5,8 @@ Unit testing library for c++
 
 ##Usage
 
-```
-#include "test.cpp"
+```cpp
+#include "test.hpp"
 using namespace Test; // Easy access to the Assert namespace
 ```
 
