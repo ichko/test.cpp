@@ -47,48 +47,69 @@ namespace Test {
 
     };
 
-    namespace Assert {
+    struct Assert {
 
-        template <typename T> static void AreEqual(T left, T right) {
+        string use_case_description;
+
+        Assert() : use_case_description("Default asserion name") {}
+
+        Assert& Describe(const string&& _use_case_description) {
+            use_case_description = _use_case_description;
+            return *this;
+        }
+
+        template <typename T> Assert& AreEqual(const T&& left, const T&& right) {
             if (left != right) {
-                throw AssertionException("Assertion are equal failed");
+                throw AssertionException(use_case_description);
             }
+
+            return *this;
         }
 
-        template <typename T> static void AreSame(T& left, T& right) {
+        template <typename T> Assert& AreSame(T& left, T& right) {
             if (&left != &right) {
-                throw AssertionException("Assertion are equal failed");
+                throw AssertionException(use_case_description);
             }
+
+            return *this;
         }
 
-        static void IsTrue(bool value) {
+        Assert& IsTrue(bool value) {
             if (!value) {
-                throw AssertionException("Assertion IsTrue failed");
+                throw AssertionException(use_case_description);
             }
+
+            return *this;
         }
 
-        static void IsFalse(bool value) {
+        Assert& IsFalse(bool value) {
             if (value) {
-                throw AssertionException("Assertion IsFalse failed");
+                throw AssertionException(use_case_description);
             }
+
+            return *this;
         }
 
-        template <typename T> static void ArraysEqual(T* left, T* right, size_t size) {
+        template <typename T> Assert& ArraysEqual(T* left, T* right, size_t size) {
             for (size_t i = 0; i < size; i++) {
                 if (left[i] != right[i]) {
-                    throw AssertionException("Assertion AssertArraysEqual failed");
+                    throw AssertionException(use_case_description);
                 }
             }
+
+            return *this;
         }
 
-        template <typename T> static void Throws(void(*function)()) {
+        template <typename T> Assert& Throws(void(*function)()) {
             try {
                 function();
             }
             catch (T) {}
             catch (...) {
-                throw AssertionException("Assertion AssertThrows failed");
+                throw AssertionException(use_case_description);
             }
+
+            return *this;
         }
 
     };
