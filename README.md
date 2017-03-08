@@ -16,40 +16,44 @@ using namespace Test; // Easy access to the Assert namespace
 ```cpp
 auto SimpleTestCase = Case("Simple test case")
 
-.Test("was pythagoras right", []() {
-    Assert::AreEqual(5 * 5, 4 * 4 + 3 * 3);
+.Test("was Pythagoras right", []() {
+    Assert()
+        .Describe("simple Pythagoras use case")
+        .AreEqual(5 * 5, 4 * 4 + 3 * 3)
+        .AreEqual(10 * 10, 8 * 8 + 6 * 6)
+
+        .Describe("complex Pythagoras use case")
+        .AreEqual(25 * 25, 20 * 20 + 15 * 15);
 })
 
 .Test("assertion true test", []() {
-    Assert::IsTrue(true);
+    Assert().IsTrue(true);
 })
 
 .Test("are same test", []() {
     int actual = Context.numeric_value;
     int& expected = actual;
 
-    Assert::AreSame(expected, actual);
+    Assert().AreSame(expected, actual);
 })
 
 .Test("failing test", []() {
-    Assert::IsTrue(false);
+    Assert()
+        .Describe("this will pass")
+        .IsTrue(true)
+        .Describe("this will fail")
+        .IsTrue(false);
 });
-
-int main() {
-    SimpleTestCase
-        .RunAll()
-        .OutputResults(std::cout);
-}
 ```
 
 ### Output
 ```
 # Simple test case
-1. [+] was pythagoras right
+1. [+] was Pythagoras right
 2. [+] assertion true test
 3. [+] are same test
 4. [-] failing test
-   Assertion IsTrue failed
+   this will fail
 ```
 
 ## Complex test case
@@ -88,7 +92,7 @@ auto ComplexTestCase = Case("Compex test case")
 })
 
 .Test("test assert throws", []() {
-    Assert::Throws<char*>([]() {
+    Assert().Throws<char*>([]() {
         throw "throwing string";
     });
 })
@@ -96,7 +100,7 @@ auto ComplexTestCase = Case("Compex test case")
 .Test("assert arrays equal", []() {
     char* left_array = "hello";
     char* right_array = "hello";
-    Assert::ArraysEqual(left_array, right_array, 5);
+    Assert().ArraysEqual(left_array, right_array, 5);
 });
 
 
@@ -114,9 +118,9 @@ int main() {
 ### Output
 ```
 # Compex test case
-1. [+] are same test
-2. [-] unknown exception error
+1. [-] unknown exception error
    unknown exception on the way
+2. [+] test assert throws
 3. [+] assert arrays equal
 
 > context is destroyed
