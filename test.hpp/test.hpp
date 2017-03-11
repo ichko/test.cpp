@@ -49,18 +49,18 @@ namespace Test {
 
     struct Assert {
 
-        string use_case_description;
+        string assertion_description;
 
-        Assert() : use_case_description("Default asserion name") {}
+        Assert() : assertion_description("Default asserion name") {}
 
-        Assert& Describe(const string&& _use_case_description) {
-            use_case_description = _use_case_description;
+        Assert& Describe(const string&& _assertion_description) {
+            assertion_description = _assertion_description;
             return *this;
         }
 
         template <typename T> Assert& AreEqual(const T&& left, const T&& right) {
             if (left != right) {
-                throw AssertionException(use_case_description);
+                throw AssertionException(assertion_description);
             }
 
             return *this;
@@ -68,7 +68,7 @@ namespace Test {
 
         template <typename T> Assert& AreSame(T& left, T& right) {
             if (&left != &right) {
-                throw AssertionException(use_case_description);
+                throw AssertionException(assertion_description);
             }
 
             return *this;
@@ -76,7 +76,7 @@ namespace Test {
 
         Assert& IsTrue(bool value) {
             if (!value) {
-                throw AssertionException(use_case_description);
+                throw AssertionException(assertion_description);
             }
 
             return *this;
@@ -84,7 +84,7 @@ namespace Test {
 
         Assert& IsFalse(bool value) {
             if (value) {
-                throw AssertionException(use_case_description);
+                throw AssertionException(assertion_description);
             }
 
             return *this;
@@ -93,7 +93,7 @@ namespace Test {
         template <typename T> Assert& ArraysEqual(T* left, T* right, size_t size) {
             for (size_t i = 0; i < size; i++) {
                 if (left[i] != right[i]) {
-                    throw AssertionException(use_case_description);
+                    throw AssertionException(assertion_description);
                 }
             }
 
@@ -106,7 +106,7 @@ namespace Test {
             }
             catch (T) {}
             catch (...) {
-                throw AssertionException(use_case_description);
+                throw AssertionException(assertion_description);
             }
 
             return *this;
